@@ -20,16 +20,14 @@ def create_rag_chain(vectorstore):
     print("\n🚀 Initializing RAG chain...")
 
     # 1️⃣ Create retriever
-    assert vectorstore is not None, "❌ Vectorstore not loaded or invalid."
-    
     retriever = vectorstore.as_retriever(
-        search_type="mmr",  # or "similarity"
+        search_type="similarity",
         search_kwargs={"k": 3}
     )
 
     # 2️⃣ Initialize LLM (Groq)
     llm = ChatGroq(
-        model="opeanai/gpt-oss-120b",
+        model="openai/gpt-oss-120b",
         temperature=0.7,
     )
 

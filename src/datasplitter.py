@@ -25,7 +25,7 @@ def split_docs(documents):
 
     print("\n✅✅ Documents split successfully!")
     print(
-        f"\n[INFO] Split <{len(documents)}> documents into <{len(chunked_documents)}> chunks."
+        f"\n[INFO] Splitted <{len(documents)}> documents into <{len(chunked_documents)}> chunks."
     )
     print("=" * 50)
 

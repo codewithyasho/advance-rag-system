@@ -9,13 +9,16 @@ End-to-end RAG pipeline using:
 """
 
 # ============================================================
-# ✅ IMPORTS
+# IMPORTS
 # ============================================================
 from src.dataloader import load_all_data
 from src.datasplitter import split_docs
 from src.embedding import huggingface_embeddings
 from src.vectorstore import create_vectorstore, load_vectorstore
 from src.chain import create_rag_chain
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
 
 # ============================================================
@@ -47,29 +50,31 @@ def main():
     embeddings = huggingface_embeddings()
 
     # 4️⃣ Create or load FAISS vectorstore
-    try:
-        vectorstore = load_vectorstore(embeddings, "faiss_index")
-        print("\n✅ Existing vectorstore loaded.")
-
-    except:
-        print("\n⚙️ Creating new FAISS vectorstore...")
+    if os.path.exists("faiss_index"):
+        vectorstore = load_vectorstore(
+            embeddings, vectorstore_path="faiss_index")
+    else:
         vectorstore = create_vectorstore(chunked_docs, embeddings)
 
     # 5️⃣ Build RAG chain
     rag_chain = create_rag_chain(vectorstore)
 
-    # 6️⃣ Ask a question
-    query = input("\n💬 Enter your question: ")
-    response = rag_chain.invoke({"input": query})
+    while True:
+        # 6️⃣ Ask a question
+        query = input("\nEnter your question: ")
+        if query.lower() == 'exit':
+            print("👋 Exiting RAG Pipeline. Goodbye!")
+            break
 
-    # 7️⃣ Display answer
-    print("\n🧠 AI Answer:")
-    print(response["answer"])
-    print("=" * 60)
+        # 7️⃣ Display answer
+        response = rag_chain.invoke({"input": query})
+        print("\n🧠 AI Answer:")
+        print(response["answer"])
+        print("=" * 60)
 
 
 # ============================================================
-# 🏁 ENTRY POINT
+# ENTRY POINT
 # ============================================================
 if __name__ == "__main__":
     main()
