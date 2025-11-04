@@ -4,7 +4,7 @@ A professional Retrieval-Augmented Generation (RAG) system built with LangChain,
 
 ## ✨ Features
 
-- 📄 **Multi-Format Support**: PDF, TXT, DOCX, CSV, JSON, XLSX, and web pages
+- 📄 **Multi-Format Support**: PDF, TXT, DOCX, CSV, PPTX, XLSX, and web pages
 - 🧠 **Smart Document Chunking**: Recursive text splitting with optimal chunk sizes
 - 🔍 **Vector Search**: FAISS-based similarity search with cosine distance
 - ⚡ **Fast Inference**: Powered by Groq LLM for quick responses
@@ -83,7 +83,7 @@ project14-Advance-rag-pipeline/
    
    Place your documents in the `data/` directory:
    - PDFs → `data/pdf_files/`
-   - Other formats supported: TXT, DOCX, CSV, JSON, XLSX
+   - Other formats supported: TXT, DOCX, CSV, PPTX, XLSX
 
 ## 🚀 Usage
 
@@ -182,7 +182,7 @@ llm = ChatGroq(
 | Word | `.docx` | UnstructuredWordDocumentLoader |
 | Excel | `.xlsx` | StructuredExcelLoader |
 | CSV | `.csv` | CSVLoader |
-| JSON | `.json` | JSONLoader |
+| PPTX | `.pptx` | UnstructuredPowerPointLoader |
 | Web | URLs | WebBaseLoader |
 
 ## 🎯 Advanced Features
