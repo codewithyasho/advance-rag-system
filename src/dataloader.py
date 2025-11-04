@@ -3,7 +3,10 @@ contains all data loading functions for pdfs, text , word, excel, web pages, jso
 '''
 
 from pathlib import Path
+import json
 from langchain_classic.document_loaders import PyMuPDFLoader, TextLoader, WebBaseLoader, CSVLoader, JSONLoader, UnstructuredWordDocumentLoader
+from langchain_community.document_loaders import UnstructuredPowerPointLoader
+from langchain_classic.docstore.document import Document
 from langchain_excel_loader import StructuredExcelLoader
 
 
@@ -47,7 +50,13 @@ def process_all_pdfs(directory):
 
 # 2. read all the text files inside the directory
 def process_all_texts(directory):
-    return process_files(directory, ".txt", TextLoader)
+    # Add encoding and error handling for text files
+    return process_files(
+        directory,
+        ".txt",
+        TextLoader,
+        loader_kwargs={"encoding": "utf-8", "autodetect_encoding": True}
+    )
 
 
 # 3. load all excel files in a directory using langchain_excel_loader
@@ -62,12 +71,13 @@ def process_all_word_docs(directory):
 
 # 5. load all csv files in a directory
 def process_all_csvs(directory):
-    return process_files(directory, ".csv", CSVLoader)
-
-
-# 6. load all json files in a directory
-def process_all_jsons(directory):
-    return process_files(directory, ".json", JSONLoader)
+    # Add encoding for CSV files
+    return process_files(
+        directory,
+        ".csv",
+        CSVLoader,
+        loader_kwargs={"encoding": "utf-8"}
+    )
 
 
 # 7. read all the web pages from a list of urls
@@ -105,6 +115,44 @@ def process_all_webpages(urls):
     return all_documents
 
 
+# 8. load all the pptx files inside the directory
+
+def process_all_pptx(directory):
+    '''Process all pptx files in a directory using UnstructuredPowerPointLoader'''
+
+    all_documents = []
+    pptx_dir = Path(directory)
+
+    # finding all pptx files recursively
+    pptx_files = list(pptx_dir.glob('**/*.pptx'))
+
+    print(f"\n====== Found {len(pptx_files)} PPTX files to process ======")
+
+    for file in pptx_files:
+        print(f"\n[INFO] Processing: {file.name} file")
+
+        try:
+            loader = UnstructuredPowerPointLoader(
+                str(file)
+            )
+            documents = loader.load()
+
+            # .extend() adds individual items to the list
+            all_documents.extend(documents)
+
+            print(
+                f"\n✅ Successfully Loaded <{len(documents)}> pages from {file.name}")
+            print("=" * 50)
+
+        except Exception as e:
+            print(f"❌ Error processing {file.name}: {e}")
+            continue
+
+    print(f"\n\n[INFO] Total PPTX documents loaded: <{len(all_documents)}>\n")
+
+    return all_documents
+
+
 # ====================================================================
 # COMBINED DATA LOADER (Optional)
 # ====================================================================
@@ -117,9 +165,9 @@ def load_all_data(directory, urls=None):
     all_docs += process_all_pdfs(directory)
     all_docs += process_all_texts(directory)
     all_docs += process_all_word_docs(directory)
-    all_docs += process_all_jsons(directory)
     all_docs += process_all_csvs(directory)
     all_docs += process_all_excels(directory)
+    all_docs += process_all_pptx(directory)
     if urls:
         all_docs += process_all_webpages(urls)
 

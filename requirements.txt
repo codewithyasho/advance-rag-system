@@ -19,6 +19,8 @@ faiss-cpu
 pymupdf
 unstructured
 langchain-excel-loader
+python-pptx
+chardet  # For automatic encoding detection
 
 # Additional document processing
 python-docx
