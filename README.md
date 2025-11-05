@@ -87,9 +87,24 @@ project14-Advance-rag-pipeline/
 
 ## 🚀 Usage
 
-### Basic Usage
+### Option 1: Web Application (Recommended)
 
-Run the main pipeline:
+Run the Streamlit web interface:
+
+```bash
+streamlit run app.py
+```
+
+This will open a beautiful web interface in your browser where you can:
+- 📊 Monitor pipeline status
+- 💬 Chat with your documents
+- 📚 View source documents for each answer
+- ⚙️ Configure settings easily
+- 🔄 Reset or rebuild the vector store
+
+### Option 2: Command Line
+
+Run the terminal-based pipeline:
 
 ```bash
 python main.py
@@ -102,7 +117,7 @@ The pipeline will:
 4. Build/load FAISS vector store
 5. Start an interactive Q&A session
 
-### Interactive Mode
+### Interactive Mode (CLI)
 
 Once running, you can ask questions about your documents:
 

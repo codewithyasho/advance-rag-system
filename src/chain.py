@@ -3,7 +3,7 @@ Simple and modern RAG chain setup using LangChain Classic (Groq + FAISS).
 """
 
 from langchain_groq import ChatGroq
-from langchain_core.prompts import ChatPromptTemplate
+from src.prompt import general_purpose_prompt, medical_information_prompt
 from langchain_classic.chains import create_retrieval_chain
 from langchain_classic.chains.combine_documents import create_stuff_documents_chain
 
@@ -22,30 +22,22 @@ def create_rag_chain(vectorstore):
     # 1️⃣ Create retriever
     retriever = vectorstore.as_retriever(
         search_type="similarity",
-        search_kwargs={"k": 3}
+        search_kwargs={"k": 5}
     )
 
     # 2️⃣ Initialize LLM (Groq)
     llm = ChatGroq(
         model="openai/gpt-oss-120b",
-        temperature=0.7,
+        temperature=0.3,
     )
 
     # 3️⃣ Define prompt template
-    prompt = ChatPromptTemplate.from_template(
-        """
-        You are a helpful and factual AI assistant.
-        Use the following retrieved context to answer the user's question.
-        If the answer is not found in the context, reply with:
-        "I'm not sure based on the provided information."
 
-        <context>
-        {context}
-        </context>
+    # GENERAL PURPOSE PROMPT
+    prompt = general_purpose_prompt()
 
-        Question: {input}
-    """
-    )
+    # PROMPT FOR MEDICAL INFORMATION / HEALTH CHATBOT
+    # prompt = medical_information_prompt()
 
     # 4️⃣ Build RAG chain
     document_chain = create_stuff_documents_chain(llm, prompt)
