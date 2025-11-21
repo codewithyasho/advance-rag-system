@@ -6,7 +6,7 @@ from langchain_classic.text_splitter import RecursiveCharacterTextSplitter
 # splitting loaded documents into smaller chunks
 def split_docs(documents):
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=1000,
+        chunk_size=1200,
         chunk_overlap=200,
         length_function=len,
         separators=["\n\n", "\n", " ", ""]
